@@ -13,6 +13,40 @@ if package.loaded["lfs"] then
   lfs = require "lfs"
 end
 
+local modules = {"lfs", "rex_pcre", "lpeg", "zip", "yajl", "luasql.sqlite3", "lua-utf8", "utf8"}
+local missing = {}
+local broken = {}
+
+for _, mod in ipairs(modules) do
+    local ok, lib = pcall(require, mod)
+    if not ok then
+        table.insert(missing, mod)
+    else
+        -- Test rapide d'une fonction minimale
+        local test_ok, test_err = pcall(function()
+            if mod == "lfs" then lib.currentdir() end
+            if mod == "rex_pcre" then lib.match("abc","a") end
+            if mod == "lpeg" then lib.P("a") end
+            if mod == "zip" then local _ = lib.open end
+            if mod == "yajl" then local _ = lib.encode end
+            if mod == "luasql.sqlite3" then local env = lib.sqlite3() end
+            if mod == "lua-utf8" or mod == "utf8" then local _ = lib.len or require("utf8") end
+        end)
+        if not test_ok then
+            table.insert(broken, mod .. " (loaded but unusable)")
+        end
+    end
+end
+
+if #missing > 0 or #broken > 0 then
+    print("Lua modules issues:")
+    for _, mod in ipairs(missing) do print("  - Missing: " .. mod) end
+    for _, mod in ipairs(broken) do print("  - Broken: " .. mod) end
+    os.exit(1)
+end
+
+print("All modules loaded and usable!")
+
 -- TODO this is required by DB.lua, so we might load it all at one place
 --if package.loaded["luasql.sqlite3"] then require "luasql.sqlite3" end
 

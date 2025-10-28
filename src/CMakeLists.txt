@@ -23,6 +23,8 @@
 ############################################################################
 
 set(LIB_MUDLET_NAME "mudlet_core")
+set(EXE_MUDLET_NAME "mudlet")
+
 set(mudlet_RCCS mudlet.qrc)
 configure_file("${mudlet_SOURCE_DIR}/translations/translated/qm.qrc" "${mudlet_BINARY_DIR}/translations/translated/qm.qrc" COPYONLY)
 
@@ -517,6 +519,7 @@ add_library(${LIB_MUDLET_NAME} STATIC
     ${mudlet_HDRS}
     ${mudlet_UIS}
 )
+set_target_properties(${LIB_MUDLET_NAME} PROPERTIES LINK_FLAGS "-Wl,-E")
 
 # Enable symbol exports from the main executable so that dynamically loaded Lua modules
 # can find and use Lua API symbols (like lua_gettop) at runtime. Without this, modules
@@ -536,11 +539,11 @@ set_target_properties(${LIB_MUDLET_NAME} PROPERTIES ENABLE_EXPORTS ON)
 # * Produce a timestamped message on the OS's command line when an autosave of
 #   the map file gets requested and when such a request gets actioned (or
 #   rejected because the profile is being loaded):
-# target_compile_definitions(mudlet PRIVATE DEBUG_MAPAUTOSAVE)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_MAPAUTOSAVE)
 #
 # * Produce all the time the surprise that normally will only occur on the
 #   first day of the fourth month of the Gregorian calendar year:
-# target_compile_definitions(mudlet PRIVATE DEBUG_EASTER_EGGS)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_EASTER_EGGS)
 #
 # * Comment this to not get debugging messages about WILL/WONT/DO/DONT and other
 #   commands for suboptions - change the value to 2 to get a bit more detail
@@ -549,42 +552,42 @@ target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_TELNET=1)
 #
 # * Produce qDebug() messages about the decoding of UTF-8 data when it is not
 #   the single bytes of pure ASCII text:
-# target_compile_definitions(mudlet PRIVATE DEBUG_UTF8_PROCESSING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_UTF8_PROCESSING)
 #
 # * Produce qDebug() messages about the decoding of GB2312/GBK/GB18030 data when
 #   it is not the single bytes of pure ASCII text:
-# target_compile_definitions(mudlet PRIVATE DEBUG_GB_PROCESSING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_GB_PROCESSING)
 #
 # * Produce qDebug() messages about the decoding of BIG5 data when it is not the
 #   single bytes of pure ASCII text:
-# target_compile_definitions(mudlet PRIVATE DEBUG_BIG5_PROCESSING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_BIG5_PROCESSING)
 #
 # * Produce qDebug() messages about the decoding of EUC-KR data when it is not
 #   the single bytes of pure ASCII text:
-# target_compile_definitions(mudlet PRIVATE DEBUG_EUC_KR_PROCESSING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_EUC_KR_PROCESSING)
 #
 # * Produce qDebug() messages about the decoding of ANSI SGR sequences:
-#   target_compile_definitions(mudlet PRIVATE DEBUG_SGR_PROCESSING)
+#   target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_SGR_PROCESSING)
 #
 # * Produce qDebug() messages about the decoding of ANSI OSC sequences:
-# target_compile_definitions(mudlet PRIVATE DEBUG_OSC_PROCESSING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_OSC_PROCESSING)
 #
 # * Produce qDebug() messages about the decoding of ANSI MXP sequences although
 #   there is not much against this item at present {only an announcement of the
 #   type (?) of an `\x1b[?z` received}:
-# target_compile_definitions(mudlet PRIVATE DEBUG_MXP_PROCESSING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_MXP_PROCESSING)
 #
 # * Enable the features associated with reporting problems in processing Unicode
 #   codepoints that cannot be displayed on screen in a `TConsole`:
-# target_compile_definitions(mudlet PRIVATE DEBUG_CODEPOINT_PROBLEMS)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_CODEPOINT_PROBLEMS)
 #
 # * Produce qDebug() messages about window handling operations like dock widget
 #   transfers, profile switching, and detached window management:
-# target_compile_definitions(mudlet PRIVATE DEBUG_WINDOW_HANDLING)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_WINDOW_HANDLING)
 #
 # * Enable player icon adjustment controls in the 3D mapper for debugging and 
 #   alignment purposes - these are normally hidden in production builds:
-# target_compile_definitions(mudlet PRIVATE DEBUG_PLAYER_ICON_CONTROLS)
+# target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC DEBUG_PLAYER_ICON_CONTROLS)
 
 target_sources(${LIB_MUDLET_NAME} PUBLIC "${mudlet_BINARY_DIR}/translations/translated/qm.qrc")
 
@@ -675,75 +678,6 @@ if(USE_VARIABLE_SPLASH_SCREEN)
   target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC INCLUDE_VARIABLE_SPLASH_SCREEN)
 endif()
 
-if(WIN32)
-  target_link_libraries(${LIB_MUDLET_NAME} ws2_32)
-  set_target_properties(${LIB_MUDLET_NAME} PROPERTIES WIN32_EXECUTABLE ON)
-  # The UNICODE and _UNICODE definitions are needed to make
-  # (QString) mudlet::getShortPathName(const QString& name) work in Windows:
-  target_compile_definitions(${LIB_MUDLET_NAME} PUBLIC UNICODE _UNICODE)
-endif()
-
-if(APPLE)
-  target_link_libraries(${LIB_MUDLET_NAME} "-framework AppKit")
-
-  if(USE_UPDATER)
-    # need to specifically call out Objective-C sources so that automoc builds them.
-    target_sources(${LIB_MUDLET_NAME} PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}/sparkleupdater.h"
-    "${CMAKE_CURRENT_SOURCE_DIR}/sparkleupdater.mm")
-    find_package(Sparkle)
-    target_link_libraries(mudlet "-framework AppKit" Sparkle::Sparkle)
-  endif(USE_UPDATER)
-
-  set_target_properties(${LIB_MUDLET_NAME} PROPERTIES
-    MACOSX_BUNDLE ON
-    MACOSX_BUNDLE_BUNDLE_NAME Mudlet
-    MACOSX_BUNDLE_BUNDLE_VERSION ${APP_VERSION}${APP_BUILD}
-    MACOSX_BUNDLE_GUI_IDENTIFIER org.mudlet.mudlet
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${APP_VERSION}
-  )
-
-  if(${APP_BUILD} MATCHES "-ptb.+")
-    set_target_properties(${LIB_MUDLET_NAME} PROPERTIES
-      MACOSX_BUNDLE_ICON_FILE mudlet_ptb.icns
-      MACOSX_BUNDLE_LONG_VERSION_STRING ${APP_VERSION}${APP_BUILD}
-    )
-    file(GLOB ICON_FILE "icons/mudlet_ptb.icns")
-  elseif((${APP_BUILD} MATCHES "-dev.+") OR (${APP_BUILD} MATCHES "-test.+"))
-    set_target_properties(${LIB_MUDLET_NAME} PROPERTIES
-      MACOSX_BUNDLE_ICON_FILE mudlet_dev.icns
-      MACOSX_BUNDLE_LONG_VERSION_STRING ${APP_VERSION}${APP_BUILD}
-    )
-    file(GLOB ICON_FILE "icons/mudlet_dev.icns")
-  else()
-    set_target_properties(${LIB_MUDLET_NAME} PROPERTIES
-      MACOSX_BUNDLE_ICON_FILE mudlet.icns
-      MACOSX_BUNDLE_LONG_VERSION_STRING ${APP_VERSION}
-    )
-    file(GLOB ICON_FILE "icons/mudlet.icns")
-  endif()
-
-  file(GLOB_RECURSE MUDLET_LUA_FILES LIST_DIRECTORIES true "mudlet-lua/*")
-  file(GLOB_RECURSE LUA_TRANSLATIONS LIST_DIRECTORIES true "../translations/lua/*")
-  file(GLOB DIC_FILES "*.dic")
-  file(GLOB AFF_FILES "*.aff")
-  target_sources(${LIB_MUDLET_NAME} PUBLIC ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
-
-  set_source_files_properties(${DIC_FILES} ${AFF_FILES} ${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  foreach(FILE ${MUDLET_LUA_FILES})
-    string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR} "" PATH_IN_BUNDLE ${FILE} )
-    get_filename_component(PATH_IN_BUNDLE "${PATH_IN_BUNDLE}" DIRECTORY)
-    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/${PATH_IN_BUNDLE})
-  endforeach()
-  foreach(FILE ${LUA_TRANSLATIONS})
-    # convert relative paths to absolute ones, necessary for the ../translations
-    file(REAL_PATH ${FILE} FILE)
-    string(REPLACE ${CMAKE_SOURCE_DIR}/translations "" PATH_IN_BUNDLE ${FILE} )
-    get_filename_component(PATH_IN_BUNDLE "${PATH_IN_BUNDLE}" DIRECTORY)
-    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/translations/${PATH_IN_BUNDLE})
-  endforeach()
-endif()
-
 target_compile_options(${LIB_MUDLET_NAME} PUBLIC -Wno-deprecated)
 
 
@@ -761,9 +695,104 @@ set(USE_SANITIZER
 add_sanitizer_support(${USE_SANITIZER})
 message(STATUS "Compiling with the following sanitizer(s) enabled: ${USE_SANITIZER}")
 
-add_executable(mudlet_executable main.cpp)
-set_target_properties(mudlet_executable PROPERTIES OUTPUT_NAME "mudlet")
+add_executable(mudlet_executable
+  main.cpp
+)
+set_target_properties(mudlet_executable PROPERTIES OUTPUT_NAME ${EXE_MUDLET_NAME})
 target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
+
+
+
+
+# target_link_libraries(
+#         mudlet_executable
+#         ${LIB_MUDLET_NAME}
+#         communi
+#         edbee-lib
+#         QTagEdit
+#         Boost::boost
+#         HUNSPELL::HUNSPELL
+#         LUA51::LUA51
+#         PCRE::PCRE
+#         PUGIXML::PUGIXML
+#         ZIP::ZIP
+#         ZLIB::ZLIB
+# # PLACEMARKER: sample benchmarking code
+# #       nanobench
+#         ${QT_LIBS})
+
+
+# set_target_properties(mudlet_executable PROPERTIES ENABLE_EXPORTS ON)
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
+
+if(WIN32)
+  target_link_libraries(mudlet_executable ws2_32)
+  set_target_properties(mudlet_executable PROPERTIES WIN32_EXECUTABLE ON)
+  # The UNICODE and _UNICODE definitions are needed to make
+  # (QString) mudlet::getShortPathName(const QString& name) work in Windows:
+  target_compile_definitions(mudlet_executable PRIVATE UNICODE _UNICODE)
+endif()
+
+if(APPLE)
+  target_link_libraries(mudlet_executable "-framework AppKit")
+
+  if(USE_UPDATER)
+    # need to specifically call out Objective-C sources so that automoc builds them.
+    target_sources(mudlet_executable PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/sparkleupdater.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/sparkleupdater.mm")
+    find_package(Sparkle)
+    target_link_libraries(mudlet_executable "-framework AppKit" Sparkle::Sparkle)
+  endif(USE_UPDATER)
+
+  set_target_properties(mudlet_executable PROPERTIES
+    MACOSX_BUNDLE ON
+    MACOSX_BUNDLE_BUNDLE_NAME Mudlet
+    MACOSX_BUNDLE_BUNDLE_VERSION ${APP_VERSION}${APP_BUILD}
+    MACOSX_BUNDLE_GUI_IDENTIFIER org.mudlet.mudlet
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${APP_VERSION}
+  )
+
+  if(${APP_BUILD} MATCHES "-ptb.+")
+    set_target_properties(mudlet_executable PROPERTIES
+      MACOSX_BUNDLE_ICON_FILE mudlet_ptb.icns
+      MACOSX_BUNDLE_LONG_VERSION_STRING ${APP_VERSION}${APP_BUILD}
+    )
+    file(GLOB ICON_FILE "icons/mudlet_ptb.icns")
+  elseif((${APP_BUILD} MATCHES "-dev.+") OR (${APP_BUILD} MATCHES "-test.+"))
+    set_target_properties(mudlet_executable PROPERTIES
+      MACOSX_BUNDLE_ICON_FILE mudlet_dev.icns
+      MACOSX_BUNDLE_LONG_VERSION_STRING ${APP_VERSION}${APP_BUILD}
+    )
+    file(GLOB ICON_FILE "icons/mudlet_dev.icns")
+  else()
+    set_target_properties(mudlet_executable PROPERTIES
+      MACOSX_BUNDLE_ICON_FILE mudlet.icns
+      MACOSX_BUNDLE_LONG_VERSION_STRING ${APP_VERSION}
+    )
+    file(GLOB ICON_FILE "icons/mudlet.icns")
+  endif()
+
+  file(GLOB_RECURSE MUDLET_LUA_FILES LIST_DIRECTORIES true "mudlet-lua/*")
+  file(GLOB_RECURSE LUA_TRANSLATIONS LIST_DIRECTORIES true "../translations/lua/*")
+  file(GLOB DIC_FILES "*.dic")
+  file(GLOB AFF_FILES "*.aff")
+  target_sources(mudlet_executable PRIVATE ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
+
+  set_source_files_properties(${DIC_FILES} ${AFF_FILES} ${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  foreach(FILE ${MUDLET_LUA_FILES})
+    string(REPLACE ${CMAKE_CURRENT_SOURCE_DIR} "" PATH_IN_BUNDLE ${FILE} )
+    get_filename_component(PATH_IN_BUNDLE "${PATH_IN_BUNDLE}" DIRECTORY)
+    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/${PATH_IN_BUNDLE})
+  endforeach()
+  foreach(FILE ${LUA_TRANSLATIONS})
+    # convert relative paths to absolute ones, necessary for the ../translations
+    file(REAL_PATH ${FILE} FILE)
+    string(REPLACE ${CMAKE_SOURCE_DIR}/translations "" PATH_IN_BUNDLE ${FILE} )
+    get_filename_component(PATH_IN_BUNDLE "${PATH_IN_BUNDLE}" DIRECTORY)
+    set_source_files_properties(${FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources/translations/${PATH_IN_BUNDLE})
+  endforeach()
+endif()
 
 # *nix "make install" provision:
 if(UNIX AND NOT APPLE)
