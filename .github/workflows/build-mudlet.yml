@@ -17,7 +17,7 @@ jobs:
   compile-mudlet:
     name: ${{matrix.buildname}}
     runs-on: ${{matrix.os}}
-    if: ${{ github.repository_owner == 'Mudlet' }}
+    if: ${{ github.repository_owner == 'NicolasKeita' }}
     strategy:
       fail-fast: false
       matrix:
@@ -34,19 +34,6 @@ jobs:
             qt: '6.9.0'
             deploy: 'deploy'
             run_tests: 'true'
-          - os: ubuntu-22.04
-            # Another try to use GCC12
-            buildname: 'ubuntu (x86_64)'
-            triplet: x64-linux
-            compiler: gcc_64
-            gcc_compiler_version: 12
-            qt: '6.9.0'
-          - os: ubuntu-latest
-            buildname: 'ubuntu / clang'
-            triplet: x64-linux
-            compiler: clang_64
-            gcc_compiler_version: 10
-            qt: '6.9.0'
           - os: macos-13
             buildname: 'macos (x86_64) / c++, lua tests'
             triplet: x64-osx
