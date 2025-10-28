@@ -17,7 +17,7 @@ jobs:
   compile-mudlet:
     name: ${{matrix.buildname}}
     runs-on: ${{matrix.os}}
-    if: ${{ github.repository_owner == 'Mudlet' }}
+    if: ${{ github.repository_owner == 'NicolasKeita' }}
     strategy:
       fail-fast: false
       matrix:
