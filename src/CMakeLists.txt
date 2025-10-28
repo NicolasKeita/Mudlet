@@ -738,11 +738,11 @@ if(APPLE)
 
   if(USE_UPDATER)
     # need to specifically call out Objective-C sources so that automoc builds them.
-    target_sources(mudlet_executable PRIVATE
+    target_sources(${LIB_MUDLET_NAME} PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/sparkleupdater.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/sparkleupdater.mm")
     find_package(Sparkle)
-    target_link_libraries(mudlet_executable "-framework AppKit" Sparkle::Sparkle)
+    target_link_libraries(${LIB_MUDLET_NAME} "-framework AppKit" Sparkle::Sparkle)
   endif(USE_UPDATER)
 
   set_target_properties(mudlet_executable PROPERTIES
@@ -778,6 +778,8 @@ if(APPLE)
   file(GLOB DIC_FILES "*.dic")
   file(GLOB AFF_FILES "*.aff")
   target_sources(mudlet_executable PRIVATE ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
+  target_sources(${LIB_MUDLET_NAME} PUBLIC ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
+
 
   set_source_files_properties(${DIC_FILES} ${AFF_FILES} ${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   foreach(FILE ${MUDLET_LUA_FILES})
