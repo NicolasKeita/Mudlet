@@ -524,7 +524,7 @@ set_target_properties(${LIB_MUDLET_NAME} PROPERTIES LINK_FLAGS "-Wl,-E")
 # Enable symbol exports from the main executable so that dynamically loaded Lua modules
 # can find and use Lua API symbols (like lua_gettop) at runtime. Without this, modules
 # will fail to load with "undefined symbol" errors.
-set_target_properties(${LIB_MUDLET_NAME} PROPERTIES ENABLE_EXPORTS ON)
+#set_target_properties(${LIB_MUDLET_NAME} PROPERTIES ENABLE_EXPORTS ON)
 
 ########################### Debugging code inclusions ##########################
 # Controls the include/selection of extra code to aide developers debug various
