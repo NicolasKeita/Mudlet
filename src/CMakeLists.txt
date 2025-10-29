@@ -723,7 +723,7 @@ target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
 #         ${QT_LIBS})
 
 
-# set_target_properties(mudlet_executable PROPERTIES ENABLE_EXPORTS ON)
+set_target_properties(mudlet_executable PROPERTIES ENABLE_EXPORTS ON)
 # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -rdynamic")
 
 if(WIN32)
