@@ -5836,6 +5836,21 @@ void TLuaInterpreter::initIndenterGlobals()
 // the LFS "Lua File System" one first}:
 void TLuaInterpreter::loadGlobal()
 {
+
+    lua_getglobal(pGlobalLua, "yajl");
+    if (!lua_istable(pGlobalLua, -1)) {
+        qDebug() << "❌ yajl n'est pas une table";
+    } else {
+        lua_getfield(pGlobalLua, -1, "to_value");
+        if (lua_isfunction(pGlobalLua, -1)) {
+            qDebug() << "✅ yajl.to_value est présent.";
+        } else {
+            qDebug() << "⚠️ yajl.to_value est manquant.";
+        }
+        lua_pop(pGlobalLua, 1); // retire le champ
+    }
+    lua_pop(pGlobalLua, 1); // retire yajl
+
 #if defined(Q_OS_WINDOWS)
     loadUtf8Filenames();
 #endif

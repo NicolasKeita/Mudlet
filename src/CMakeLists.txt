@@ -700,16 +700,7 @@ add_executable(mudlet_executable
   main.cpp
 )
 set_target_properties(mudlet_executable PROPERTIES OUTPUT_NAME ${EXE_MUDLET_NAME})
-#target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
-
-
-if(UNIX)
-  target_link_libraries(mudlet_executable
-    "-Wl,--whole-archive" ${LIB_MUDLET_NAME} "-Wl,--no-whole-archive"
-  )
-else()
-  target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
-endif()
+target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
 
 
 
@@ -787,8 +778,8 @@ if(APPLE)
   file(GLOB_RECURSE LUA_TRANSLATIONS LIST_DIRECTORIES true "../translations/lua/*")
   file(GLOB DIC_FILES "*.dic")
   file(GLOB AFF_FILES "*.aff")
-  target_sources(mudlet_executable PRIVATE ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
-  target_sources(${LIB_MUDLET_NAME} PUBLIC ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
+  target_sources(mudlet_executable PUBLIC ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
+  #target_sources(${LIB_MUDLET_NAME} PUBLIC ${MUDLET_LUA_FILES} ${LUA_TRANSLATIONS} ${DIC_FILES} ${AFF_FILES} ${ICON_FILE})
 
 
   set_source_files_properties(${DIC_FILES} ${AFF_FILES} ${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
