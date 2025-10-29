@@ -700,7 +700,16 @@ add_executable(mudlet_executable
   main.cpp
 )
 set_target_properties(mudlet_executable PROPERTIES OUTPUT_NAME ${EXE_MUDLET_NAME})
-target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
+#target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
+
+
+if(UNIX)
+  target_link_libraries(mudlet_executable
+    "-Wl,--whole-archive" ${LIB_MUDLET_NAME} "-Wl,--no-whole-archive"
+  )
+else()
+  target_link_libraries(mudlet_executable ${LIB_MUDLET_NAME})
+endif()
 
 
 
