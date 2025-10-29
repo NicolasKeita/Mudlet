@@ -34,20 +34,6 @@ jobs:
             qt: '6.9.0'
             deploy: 'deploy'
             run_tests: 'true'
-          - os: macos-13
-            buildname: 'macos (x86_64) / c++, lua tests'
-            triplet: x64-osx
-            compiler: clang_64
-            qt: '6.9.0'
-            deploy: 'deploy'
-            run_tests: 'true'
-          - os: macos-14
-            buildname: 'macos (arm64) / c++, lua tests'
-            triplet: arm64-osx
-            compiler: clang_64
-            qt: '6.9.0'
-            deploy: 'deploy'
-            run_tests: 'true'
 
     env:
       BOOST_ROOT: ${{github.workspace}}/3rdparty/boost
