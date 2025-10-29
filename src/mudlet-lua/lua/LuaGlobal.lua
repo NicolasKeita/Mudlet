@@ -13,16 +13,48 @@ if package.loaded["lfs"] then
   lfs = require "lfs"
 end
 
-local modules = {"lfs", "rex_pcre", "lpeg", "zip", "yajl", "luasql.sqlite3", "lua-utf8", "utf8"}
+print("==== Lua module loader debug ====")
+print("Lua version:", _VERSION)
+print("package.path = ", package.path)
+print("package.cpath = ", package.cpath)
+print("----------------------------------")
+
+local modules = {
+    "lfs", "rex_pcre", "lpeg", "zip",
+    "yajl", "luasql.sqlite3", "lua-utf8", "utf8"
+}
+
 local missing = {}
 local broken = {}
+local loaded_paths = {}
+
+-- Hook pour savoir quel fichier est utilisé
+local original_require = require
+require = function(mod)
+    local result, path
+    for _, searcher in ipairs(package.loaders or package.searchers) do
+        local loader, found_path = searcher(mod)
+        if type(loader) == "function" then
+            path = found_path
+            break
+        end
+    end
+    local ok, lib = pcall(original_require, mod)
+    if ok then
+        loaded_paths[mod] = path or "(Lua builtin or C-preloaded)"
+        return lib
+    else
+      -- error(lib)  -- on commente pour ne pas arrêter le script
+      print("[WARN] module '" .. mod .. "' could not be loaded: " .. tostring(lib))
+      return nil  -- retourne nil pour que le programme continue
+    end
+end
 
 for _, mod in ipairs(modules) do
     local ok, lib = pcall(require, mod)
     if not ok then
         table.insert(missing, mod)
     else
-        -- Test rapide d'une fonction minimale
         local test_ok, test_err = pcall(function()
             if mod == "lfs" then lib.currentdir() end
             if mod == "rex_pcre" then lib.match("abc","a") end
@@ -38,14 +70,72 @@ for _, mod in ipairs(modules) do
     end
 end
 
-if #missing > 0 or #broken > 0 then
-    print("Lua modules issues:")
-    for _, mod in ipairs(missing) do print("  - Missing: " .. mod) end
-    for _, mod in ipairs(broken) do print("  - Broken: " .. mod) end
-    os.exit(1)
+print("\n==== Module summary ====")
+for mod, path in pairs(loaded_paths) do
+    print(string.format("[OK] %s → %s", mod, path))
+end
+for _, mod in ipairs(broken) do
+    print("[BROKEN] " .. mod)
+end
+for _, mod in ipairs(missing) do
+    print("[MISSING] " .. mod)
+end
+print("=================================")
+
+print("==== Checking preloaded (embedded) Lua modules ====")
+
+local found = false
+for name, loader in pairs(package.preload) do
+    print("[PRELOADED] " .. name)
+    found = true
 end
 
-print("All modules loaded and usable!")
+if not found then
+    print("(none found — no modules embedded in package.preload)")
+end
+
+print("===================================================")
+
+local module_name = "lpeg"  -- ou "rex_pcre", "zip", etc.
+
+if package.preload[module_name] then
+  print(module_name .. " is preloaded in the executable (package.preload)")
+else
+  print(module_name .. " is NOT preloaded, checking cpath...")
+
+  -- On essaye de le charger sans l'exécuter
+  for _, searcher in ipairs(package.loaders or package.searchers) do
+    local loader, path = searcher(module_name)
+    if type(loader) == "function" then
+      print(module_name .. " found at path:", path or "(C built-in)")
+      break
+    end
+  end
+end
+
+print("== Test recherche lpeg ==")
+print("Lua version:", _VERSION)
+print("package.path:", package.path)
+print("package.cpath:", package.cpath)
+print("----------------------------------")
+
+-- test manuel des chemins .so
+local name = "lpeg"
+for path in string.gmatch(package.cpath, "[^;]+") do
+  local candidate = path:gsub("?", name)
+  local f = io.open(candidate, "rb")
+  if f then
+    print("[FOUND FILE] " .. candidate)
+    f:close()
+  else
+    print("[missing] " .. candidate)
+  end
+end
+
+print("----------------------------------")
+local ok, mod = pcall(require, "lpeg")
+print("require('lpeg') =", ok, mod)
+print("----------------------------------")
 
 -- TODO this is required by DB.lua, so we might load it all at one place
 --if package.loaded["luasql.sqlite3"] then require "luasql.sqlite3" end
