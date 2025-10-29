@@ -44,9 +44,9 @@ require = function(mod)
         loaded_paths[mod] = path or "(Lua builtin or C-preloaded)"
         return lib
     else
-      -- error(lib)  -- on commente pour ne pas arrêter le script
-      print("[WARN] module '" .. mod .. "' could not be loaded: " .. tostring(lib))
-      return nil  -- retourne nil pour que le programme continue
+    -- error(lib)  -- on commente pour ne pas arrêter le script
+    print("[WARN] module '" .. mod .. "' could not be loaded: " .. tostring(lib))
+    return nil  -- retourne nil pour que le programme continue
     end
 end
 
@@ -136,6 +136,41 @@ print("----------------------------------")
 local ok, mod = pcall(require, "lpeg")
 print("require('lpeg') =", ok, mod)
 print("----------------------------------")
+
+
+
+local ok, mod = pcall(require, "utf8")
+if ok then
+    print("utf8 type:", type(mod))
+    for k,v in pairs(mod) do
+        print("  ", k, v)
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- TODO this is required by DB.lua, so we might load it all at one place
 --if package.loaded["luasql.sqlite3"] then require "luasql.sqlite3" end
