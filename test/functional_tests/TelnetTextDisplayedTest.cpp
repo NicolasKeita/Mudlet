@@ -92,9 +92,10 @@ private slots:
 
     void test_TelnetTextDisplayed()
     {
+        QString messageFromTheMud("\x1B[1z<B>Greetings < hunters & sorcerers</B>\x1B[7z");
         QString messageToExpect("Greetings < hunters & sorcerers");
 
-        server->setWelcomeMessage(messageToExpect);
+        server->setWelcomeMessage(messageFromTheMud);
         startProfile(HOSTNAME);
         QSignalSpy(mudlet::self()->getActiveHost()->mpConsole, &TMainConsole::signal_newDataAlert).wait(200);
 
