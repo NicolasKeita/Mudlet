@@ -1,0 +1,20 @@
+set(LIB_MUDLET_TARGET "mudlet_core")
+
+set(FUNCTIONAL_TEST_SOURCES
+    TelnetTextDisplayedTest.cpp
+)
+
+set(FUNCTIONAL_TEST_UTILS
+    TelnetServerStub.cpp
+)
+
+foreach(test_file ${FUNCTIONAL_TEST_SOURCES})
+    get_filename_component(test_name ${test_file} NAME_WE)
+    add_executable(${test_name} ${test_file} ${FUNCTIONAL_TEST_UTILS})
+    add_dependencies(${test_name} ${LIB_MUDLET_TARGET})
+    target_link_libraries(${test_name} PRIVATE Qt6::Test ${LIB_MUDLET_TARGET})
+    set_target_properties(${test_name} PROPERTIES ENABLE_EXPORTS ON)
+    add_test(NAME ${test_name}
+             COMMAND env QT_QPA_PLATFORM=offscreen $<TARGET_FILE:${test_name}>)
+    set_tests_properties(${test_name} PROPERTIES LABELS "functional")
+endforeach()
