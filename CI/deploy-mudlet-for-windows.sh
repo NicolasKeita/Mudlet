@@ -111,10 +111,10 @@ else
   echo "BUILDING MUDLET ${VERSION}${MUDLET_VERSION_BUILD}-${BUILD_COMMIT}"
 fi
 
-# Check if we're building from the Mudlet/Mudlet repository and not a fork
-if [[ "${GITHUB_REPO_NAME}" != "Mudlet/Mudlet" ]]; then
-  exit 2
-fi
+# # Check if we're building from the Mudlet/Mudlet repository and not a fork
+# if [[ "${GITHUB_REPO_NAME}" != "Mudlet/Mudlet" ]]; then
+#   exit 2
+# fi
 
 # This will change to end in "-debug" if we ever do that type of build:
 PACKAGE_PATH="$(cygpath -au "${GITHUB_WORKSPACE}/package-${MSYSTEM}-release")"
