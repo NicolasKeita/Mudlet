@@ -256,7 +256,6 @@ jobs:
       run: ctest --output-on-failure
 
     - name: Run QTest
-      shell: msys2 {0}
       run: ctest --test-dir ${{runner.workspace}}/b/ninja -L functional --output-on-failure
 
     - name: install dependencies for packaging/tests
