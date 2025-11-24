@@ -1,3 +1,7 @@
+if(NOT WIN32)
+    include(${CMAKE_SOURCE_DIR}/src/cmake/EnableSanitizers.cmake)
+endif()
+
 set(FUNCTIONAL_TEST_SOURCES
     TelnetTextDisplayedTest.cpp
 )
@@ -13,12 +17,9 @@ foreach(test_file ${FUNCTIONAL_TEST_SOURCES})
     target_link_libraries(${test_name} PRIVATE Qt6::Test ${LIB_MUDLET_TARGET})
     set_target_properties(${test_name} PROPERTIES ENABLE_EXPORTS ON)
     add_test(NAME ${test_name} COMMAND $<TARGET_FILE:${test_name}>)
-    
-    # By default, tests run in offscreen mode to avoid opening windows.
-    # If you want to actually see the GUI during the test, you can comment out
-    # the QT_QPA_PLATFORM=offscreen line below.
     set_tests_properties(${test_name} PROPERTIES
-        ENVIRONMENT "QT_QPA_PLATFORM=offscreen"
+        ENVIRONMENT "QT_QPA_PLATFORM=offscreen;ASAN_OPTIONS=detect_leaks=0"
         LABELS "functional"
+        TIMEOUT 60  # seconds
     )
 endforeach()
