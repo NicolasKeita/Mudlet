@@ -251,7 +251,6 @@ jobs:
       run: ccache --show-stats
 
     - name: (macOS) Run C++ tests
-      if: runner.os == 'macOS'
       working-directory: '${{runner.workspace}}/b/ninja'
       run: ctest --output-on-failure
 
