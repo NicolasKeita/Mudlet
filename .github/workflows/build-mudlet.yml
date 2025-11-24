@@ -251,8 +251,13 @@ jobs:
       run: ccache --show-stats
 
     - name: (macOS) Run C++ tests
+      if: runner.os == 'macOS'
       working-directory: '${{runner.workspace}}/b/ninja'
       run: ctest --output-on-failure
+
+    - name: (Windows) Run QTest
+      shell: msys2 {0}
+      run: ctest --test-dir ${{runner.workspace}}/b/ninja -L functional --output-on-failure
 
     - name: install dependencies for packaging/tests
       if: matrix.deploy == 'deploy' || matrix.run_tests == 'true'
