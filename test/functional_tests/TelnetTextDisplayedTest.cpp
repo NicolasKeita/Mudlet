@@ -40,7 +40,8 @@ private:
     const QString mpHostname = "Test-Telnet";
     const QString mpPort = "5559";
     //const QString mpLocalhost = "127.0.0.1";
-    const QString mpLocalhost = "0.0.0.0";
+    //const QString mpLocalhost = "0.0.0.0";
+    const QString mpLocalhost = "localhost";
     //const QString mpLocalhost = "::1";
 
 private slots:
@@ -94,8 +95,8 @@ private slots:
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
-            //QTest::keyClicks(QApplication::focusWidget(), address);
-            QTest::keyClicks(QApplication::focusWidget(), "127.0.0.1");
+            QTest::keyClicks(QApplication::focusWidget(), address);
+            //QTest::keyClicks(QApplication::focusWidget(), "localhost");
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
