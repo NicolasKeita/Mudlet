@@ -383,10 +383,9 @@ void cTelnet::requestDiscordInfo()
         socketOutRaw(data);
     }
 }
-#include <iostream>
+
 void cTelnet::connectIt(const QString& address, int port)
 {
-    std::cout << "Debug ------ connecit 1 " << std::endl;
     if (mpHost) {
         mUSE_IRE_DRIVER_BUGFIX = mpHost->mUSE_IRE_DRIVER_BUGFIX;
         mFORCE_GA_OFF = mpHost->mFORCE_GA_OFF;
@@ -430,7 +429,7 @@ void cTelnet::connectIt(const QString& address, int port)
         connectIt(address, port);
         return;
     }
-std::cout << "Debug ------ connecit 2 " << std::endl;
+
     emit signal_connecting(mpHost);
 
     mHostUrl = address;
@@ -454,7 +453,6 @@ std::cout << "Debug ------ connecit 2 " << std::endl;
     // We can now use a compile-time slot for this as:
     // https://bugreports.qt.io/browse/QTBUG-67646 was (finally) fixed in
     // Qt 5.12.5:
-    std::cout << "Debug ------ connecit 3 " << std::endl;
     QHostInfo::lookupHost(address, this, &cTelnet::slot_socketHostFound);
 }
 
@@ -528,10 +526,9 @@ void cTelnet::slot_send_pass()
         sendData(mpHost->getPass(), false);
     }
 }
-#include <iostream>
+
 void cTelnet::slot_socketConnected()
 {
-    std::cout << "------ Debug socketConnected 1" << std::endl;
 #if defined(DEBUG_TELNET) && (DEBUG_TELNET & 4)
     qDebug().noquote() << "cTelnet::slot_socketConnected() INFO - called.";
 #endif
@@ -611,7 +608,6 @@ void cTelnet::slot_socketConnected()
         postMessage(tr("[  OK  ]  - Connection made (IPv4)."));
     }
 #endif
-std::cout << "------ Debug socketConnected 5" << std::endl;
     mpHost->mLuaInterpreter.call(qsl("onConnect"), QString());
     mConnectionTimer.start();
     mTimerLogin->start(2s);
@@ -846,12 +842,10 @@ void cTelnet::slot_socketSslError(const QList<QSslError>& errors)
 }
 #endif
 
-#include <iostream>
 // We now need to examing hostInfo to see whether it has IPv4 or IPv6 or both
 // types of address - so we know which socket (or both) to try to connect.
 void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
 {
-    std::cout << "------ Debug socketHostFound 1" << std::endl;
 #if defined(DEBUG_TELNET) && (DEBUG_TELNET & 4)
     qDebug().noquote() << "cTelnet::slot_socketHostFound(QHostInfo) INFO - called.";
 #endif
@@ -901,8 +895,9 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
          * means that we cannot proceed further to connect to the Game server.
          */
         TDebug(QColorConstants::Red, QColorConstants::White) << tr("Host name lookup Failure! A connection cannot be established.\n"
-                                                                   "The server name is not correct, or your nameservers are not\n") >> mpHost;
-                                                                   
+                                                                   "The server name is not correct, or your nameservers are not\n"
+                                                                   "working properly.\n")
+                                                             >> mpHost;
         //: %1 is the URL of the Game Server
         postMessage(tr("[ ERROR ] - Unable to connect to \"%1\".\n"
                        "Check your internet connection and the details entered for the game server.")
@@ -1179,9 +1174,6 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
                 mSocket_ipV6.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv6Protocol);
             }
             if (hasIPv4_address) {
-                std::cout << "------ Connect ip v4 --- slot socket_connected" << std::endl;
-
-                
                 connect(&mSocket_ipV4, &QAbstractSocket::connected, this, &cTelnet::slot_socketConnected, Qt::UniqueConnection);
                 connect(&mSocket_ipV4, &QAbstractSocket::disconnected, this, &cTelnet::slot_socketDisconnected, Qt::UniqueConnection);
                 connect(&mSocket_ipV4, &QIODevice::readyRead, this, &cTelnet::slot_socketReadyToBeRead, Qt::UniqueConnection);
@@ -1215,52 +1207,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
                                 .arg(hostInfo.hostName(), QString::number(mHostPort)));
                 }
 
-                qInfo().noquote() << "[TELNET] Trying to connect to"
-                  << hostInfo.hostName()
-                  << ":" << mHostPort;
-
-qInfo() << "[HOSTINFO] hostName:" << hostInfo.hostName();
-qInfo() << "[HOSTINFO] error:" << hostInfo.error() << hostInfo.errorString();
-qInfo() << "[HOSTINFO] lookupId:" << hostInfo.lookupId();
-
-for (const auto& addr : hostInfo.addresses()) {
-    qInfo() << "[HOSTINFO] address:" << addr.toString();
-}
-
-                connect(&mSocket_ipV4, &QAbstractSocket::connected,
-        this, [](){
-            qInfo() << "[TELNET] CONNECTED OK";
-        });
-connect(&mSocket_ipV4, &QAbstractSocket::errorOccurred,
-        this, [&](QAbstractSocket::SocketError err){
-            qCritical().noquote() << "[TELNET] SOCKET ERROR:" << err
-                                  << " / " << mSocket_ipV4.errorString();
-        });
-
-QTcpSocket testSock;
-//testSock.connectToHost("127.0.0.1", mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
-testSock.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
-if (!testSock.waitForConnected(1000)) {
-    qCritical() << "Failed to connect to stub:" << testSock.errorString();
-} else {
-    qInfo() << "Manual test connection succeeded";
-}
-
-QHostInfo::lookupHost("127.0.0.1", this, [](const QHostInfo &info){
-    qInfo() << "[TEST] Lookup 127.0.0.1 hostName:" << info.hostName()
-            << "addresses:" << info.addresses();
-});
-
-QHostInfo::lookupHost("runnervmpabsp", this, [](const QHostInfo &info){
-    qInfo() << "[TEST] Lookup runnervmpabsp hostName:" << info.hostName()
-            << "addresses:" << info.addresses()
-            << "error:" << info.error() << info.errorString();
-});
-
-
                 mSocket_ipV4.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
-qInfo() << "[TELNET] State after connectToHost:" << mSocket_ipV4.state();
-
             }
         }
 #if !defined(QT_NO_SSL)

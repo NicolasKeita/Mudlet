@@ -27,24 +27,14 @@
 #include "TelnetServerStub.h"
 #include "utils.h"
 
-
-
-
-#include <iostream>
 TelnetServerStub::TelnetServerStub(QObject* parent)
     : QTcpServer(parent)
 {
-    std::cout << "[TelnetServerStub] Constructed" << std::endl;
     connect(this, &QTcpServer::newConnection, this, &TelnetServerStub::onNewConnection);
 }
 
 void TelnetServerStub::start(const QString& host, quint16 port)
 {
-    // if (listen(QHostAddress(host), port)) {
-    //     qInfo().noquote() << qsl("✅ TelnetServerStub listening on %1:%2").arg(host).arg(port);
-    // } else {
-    //     qCritical().noquote() << qsl("❌ Failed to start TelnetServerStub: %1").arg(errorString());
-    // }
     QHostInfo info = QHostInfo::fromName(host);
 
     if (!info.addresses().isEmpty()) {
@@ -64,7 +54,6 @@ void TelnetServerStub::start(const QString& host, quint16 port)
 
 void TelnetServerStub::onNewConnection()
 {
-    std::cout << "[TelnetServerStub] onNewConnection called" << std::endl;
     QTcpSocket* client = nextPendingConnection();
 
     if (!client) {

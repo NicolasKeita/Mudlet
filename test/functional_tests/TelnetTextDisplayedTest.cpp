@@ -38,11 +38,8 @@ class TelnetTextDisplayedTest : public QObject {
 private:
     TelnetServerStub* mpServer = nullptr;
     const QString mpHostname = "Test-Telnet";
-    const QString mpPort = "5559";
-    //const QString mpLocalhost = "127.0.0.1";
-    //const QString mpLocalhost = "0.0.0.0";
+    const QString mpPort = "4000";
     const QString mpLocalhost = "localhost";
-    //const QString mpLocalhost = "::1";
 
 private slots:
     void initTestCase()
@@ -54,8 +51,6 @@ private slots:
     {
         mpServer = new TelnetServerStub(qApp);
         mpServer->start(mpLocalhost, mpPort.toUShort());
-              QTest::qWait(5000);
-        QTRY_VERIFY_WITH_TIMEOUT(mpServer->isListening(), 2000); // 2 secondes max
         mudlet::start();
         mudlet::self()->setupConfig();
         mudlet::self()->takeOwnershipOfInstanceCoordinator(std::make_unique<MudletInstanceCoordinator>("MudletInstanceCoordinator"));
@@ -96,7 +91,6 @@ private slots:
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
             QTest::keyClicks(QApplication::focusWidget(), address);
-            //QTest::keyClicks(QApplication::focusWidget(), "localhost");
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
