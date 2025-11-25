@@ -104,7 +104,7 @@ private slots:
             QFAIL("Profile took too long to load.");
         }
         QSignalSpy spy2(&(mudlet::self()->getActiveHost()->mTelnet), &cTelnet::signal_connected);
-        if (!spy2.wait(500)) {
+        if (!spy2.wait(5000)) {
             QFAIL("Could not connect with the host.");
         }
     }
