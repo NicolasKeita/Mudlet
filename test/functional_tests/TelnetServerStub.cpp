@@ -26,6 +26,10 @@
 #include "TelnetServerStub.h"
 #include "utils.h"
 
+
+
+
+#include <iostream>
 TelnetServerStub::TelnetServerStub(QObject* parent)
     : QTcpServer(parent)
 {
