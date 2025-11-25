@@ -844,10 +844,12 @@ void cTelnet::slot_socketSslError(const QList<QSslError>& errors)
 }
 #endif
 
+#include <iostream>
 // We now need to examing hostInfo to see whether it has IPv4 or IPv6 or both
 // types of address - so we know which socket (or both) to try to connect.
 void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
 {
+    std::cout << "------ Debug socketHostFound 1" << std::endl;
 #if defined(DEBUG_TELNET) && (DEBUG_TELNET & 4)
     qDebug().noquote() << "cTelnet::slot_socketHostFound(QHostInfo) INFO - called.";
 #endif
