@@ -52,9 +52,7 @@ private slots:
         mpServer = new TelnetServerStub(qApp);
         mpServer->start(mpLocalhost, mpPort.toUShort());
               QTest::qWait(5000);
-              QEventLoop loop;
-QTimer::singleShot(5000, &loop, &QEventLoop::quit); // timeout 5s
-loop.exec(); // Qt va traiter les événements, comme newConnection()
+        QTRY_VERIFY_WITH_TIMEOUT(mpServer->isListening(), 2000); // 2 secondes max
         mudlet::start();
         mudlet::self()->setupConfig();
         mudlet::self()->takeOwnershipOfInstanceCoordinator(std::make_unique<MudletInstanceCoordinator>("MudletInstanceCoordinator"));
