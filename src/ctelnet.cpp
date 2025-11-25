@@ -383,9 +383,10 @@ void cTelnet::requestDiscordInfo()
         socketOutRaw(data);
     }
 }
-
+#include <iostream>
 void cTelnet::connectIt(const QString& address, int port)
 {
+    std::cout << "Debug ------ connecit 1 " << std::endl;
     if (mpHost) {
         mUSE_IRE_DRIVER_BUGFIX = mpHost->mUSE_IRE_DRIVER_BUGFIX;
         mFORCE_GA_OFF = mpHost->mFORCE_GA_OFF;
@@ -429,7 +430,7 @@ void cTelnet::connectIt(const QString& address, int port)
         connectIt(address, port);
         return;
     }
-
+std::cout << "Debug ------ connecit 2 " << std::endl;
     emit signal_connecting(mpHost);
 
     mHostUrl = address;
@@ -453,6 +454,7 @@ void cTelnet::connectIt(const QString& address, int port)
     // We can now use a compile-time slot for this as:
     // https://bugreports.qt.io/browse/QTBUG-67646 was (finally) fixed in
     // Qt 5.12.5:
+    std::cout << "Debug ------ connecit 3 " << std::endl;
     QHostInfo::lookupHost(address, this, &cTelnet::slot_socketHostFound);
 }
 
