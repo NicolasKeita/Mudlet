@@ -50,6 +50,7 @@ private slots:
     void init()
     {
         mpServer = new TelnetServerStub(qApp);
+        QTest::qWait(5000);
         mpServer->start(mpLocalhost, mpPort.toUShort());
         mudlet::start();
         mudlet::self()->setupConfig();
