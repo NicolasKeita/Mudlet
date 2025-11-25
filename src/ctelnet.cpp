@@ -1246,6 +1246,17 @@ if (!testSock.waitForConnected(1000)) {
     qInfo() << "Manual test connection succeeded";
 }
 
+QHostInfo::lookupHost("127.0.0.1", this, [](const QHostInfo &info){
+    qInfo() << "[TEST] Lookup 127.0.0.1 hostName:" << info.hostName()
+            << "addresses:" << info.addresses();
+});
+
+QHostInfo::lookupHost("runnervmpabsp", this, [](const QHostInfo &info){
+    qInfo() << "[TEST] Lookup runnervmpabsp hostName:" << info.hostName()
+            << "addresses:" << info.addresses()
+            << "error:" << info.error() << info.errorString();
+});
+
 
                 mSocket_ipV4.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
 qInfo() << "[TELNET] State after connectToHost:" << mSocket_ipV4.state();
