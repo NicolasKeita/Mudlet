@@ -67,8 +67,10 @@ jobs:
     - name: (Windows) Run QTest
       shell: msys2 {0}
       run: |
+        export QT_FATAL_WARNINGS=1
+        export QTEST_FUNCTION_TIMEOUT=30000
         export QT_LOGGING_RULES="*.debug=true;*.warning=true;qt.qpa.*=true"
-        ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/test --output-on-failure -V
+        ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/test --output-on-failure -V 2>&1
 
     - name: (Windows) Run Lua tests
       timeout-minutes: 5
