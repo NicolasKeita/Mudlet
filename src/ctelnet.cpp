@@ -1180,6 +1180,8 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
             }
             if (hasIPv4_address) {
                 std::cout << "------ Connect ip v4 --- slot socket_connected" << std::endl;
+
+                
                 connect(&mSocket_ipV4, &QAbstractSocket::connected, this, &cTelnet::slot_socketConnected, Qt::UniqueConnection);
                 connect(&mSocket_ipV4, &QAbstractSocket::disconnected, this, &cTelnet::slot_socketDisconnected, Qt::UniqueConnection);
                 connect(&mSocket_ipV4, &QIODevice::readyRead, this, &cTelnet::slot_socketReadyToBeRead, Qt::UniqueConnection);

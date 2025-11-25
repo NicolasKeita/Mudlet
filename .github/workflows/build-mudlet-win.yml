@@ -75,6 +75,7 @@ jobs:
         ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/test --output-on-failure
       env:
         QT_FORCE_STDERR_LOGGING: 1
+        QT_LOGGING_RULES: "qt.network.*=true"   # <-- active logs réseau
       # run: |
         # export QT_FATAL_WARNINGS=1
         # export QTEST_FUNCTION_TIMEOUT=30000

@@ -50,8 +50,8 @@ private slots:
     void init()
     {
         mpServer = new TelnetServerStub(qApp);
-        QTest::qWait(5000);
         mpServer->start(mpLocalhost, mpPort.toUShort());
+              QTest::qWait(5000);
         mudlet::start();
         mudlet::self()->setupConfig();
         mudlet::self()->takeOwnershipOfInstanceCoordinator(std::make_unique<MudletInstanceCoordinator>("MudletInstanceCoordinator"));
