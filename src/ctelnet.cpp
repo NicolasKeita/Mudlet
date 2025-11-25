@@ -1215,7 +1215,23 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
                                 .arg(hostInfo.hostName(), QString::number(mHostPort)));
                 }
 
+                qInfo().noquote() << "[TELNET] Trying to connect to"
+                  << hostInfo.hostName()
+                  << ":" << mHostPort;
+
+                connect(&mSocket_ipV4, &QAbstractSocket::connected,
+        this, [](){
+            qInfo() << "[TELNET] CONNECTED OK";
+        });
+connect(&mSocket_ipV4, &QAbstractSocket::errorOccurred,
+        this, [&](QAbstractSocket::SocketError err){
+            qCritical().noquote() << "[TELNET] SOCKET ERROR:" << err
+                                  << " / " << mSocket_ipV4.errorString();
+        });
+
                 mSocket_ipV4.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
+qInfo() << "[TELNET] State after connectToHost:" << mSocket_ipV4.state();
+
             }
         }
 #if !defined(QT_NO_SSL)

@@ -52,6 +52,9 @@ private slots:
         mpServer = new TelnetServerStub(qApp);
         mpServer->start(mpLocalhost, mpPort.toUShort());
               QTest::qWait(5000);
+              QEventLoop loop;
+QTimer::singleShot(5000, &loop, &QEventLoop::quit); // timeout 5s
+loop.exec(); // Qt va traiter les événements, comme newConnection()
         mudlet::start();
         mudlet::self()->setupConfig();
         mudlet::self()->takeOwnershipOfInstanceCoordinator(std::make_unique<MudletInstanceCoordinator>("MudletInstanceCoordinator"));
@@ -108,8 +111,9 @@ private slots:
         if (!host) {
             QFAIL("No active host available for the test.");
         }
+
         QSignalSpy spy2(&(host->mTelnet), &cTelnet::signal_connected);
-        if (!spy2.wait(5000)) {
+        if (!spy2.wait(500)) {
             QFAIL("Could not connect with the host.");
         }
     }
