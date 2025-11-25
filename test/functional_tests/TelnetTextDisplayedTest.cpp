@@ -40,6 +40,7 @@ private:
     const QString mpHostname = "Test-Telnet";
     const QString mpPort = "5559";
     const QString mpLocalhost = "127.0.0.1";
+    //const QString mpLocalhost = "::1";
 
 private slots:
     void initTestCase()

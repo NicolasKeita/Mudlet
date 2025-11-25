@@ -64,6 +64,11 @@ jobs:
         GITHUB_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       run: $GITHUB_WORKSPACE/CI/build-mudlet-for-windows.sh
 
+    - name: (Windows) Map runner hostname to localhost
+      shell: powershell
+      run: |
+        Write-Output "127.0.0.1 runnervmpabsp" | Out-File -FilePath "$env:SystemRoot\System32\drivers\etc\hosts" -Encoding ASCII -Append
+
     - name: (Windows) Run QTest
       shell: msys2 {0}
       run: |
@@ -75,7 +80,6 @@ jobs:
         ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/test --output-on-failure
       env:
         QT_FORCE_STDERR_LOGGING: 1
-        QT_LOGGING_RULES: "qt.network.*=true"   # <-- active logs réseau
       # run: |
         # export QT_FATAL_WARNINGS=1
         # export QTEST_FUNCTION_TIMEOUT=30000
