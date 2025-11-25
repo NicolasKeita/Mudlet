@@ -67,7 +67,7 @@ jobs:
     - name: (Windows) Run QTest
       shell: msys2 {0}
       #run: ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/release --output-on-failure
-      run: ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/test --output-on-failure
+      run: ctest --test-dir $GITHUB_WORKSPACE/build-$MSYSTEM/test --output-on-failure -V
 
     - name: (Windows) Run Lua tests
       timeout-minutes: 5
