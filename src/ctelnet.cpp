@@ -1219,6 +1219,14 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
                   << hostInfo.hostName()
                   << ":" << mHostPort;
 
+qInfo() << "[HOSTINFO] hostName:" << hostInfo.hostName();
+qInfo() << "[HOSTINFO] error:" << hostInfo.error() << hostInfo.errorString();
+qInfo() << "[HOSTINFO] lookupId:" << hostInfo.lookupId();
+
+for (const auto& addr : hostInfo.addresses()) {
+    qInfo() << "[HOSTINFO] address:" << addr.toString();
+}
+
                 connect(&mSocket_ipV4, &QAbstractSocket::connected,
         this, [](){
             qInfo() << "[TELNET] CONNECTED OK";
