@@ -1238,7 +1238,7 @@ connect(&mSocket_ipV4, &QAbstractSocket::errorOccurred,
         });
 
 QTcpSocket testSock;
-testSock.connectToHost("127.0.0.1", 5559, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
+testSock.connectToHost("127.0.0.1", mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
 if (!testSock.waitForConnected(1000)) {
     qCritical() << "Failed to connect to stub:" << testSock.errorString();
 } else {
