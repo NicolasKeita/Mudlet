@@ -1237,6 +1237,15 @@ connect(&mSocket_ipV4, &QAbstractSocket::errorOccurred,
                                   << " / " << mSocket_ipV4.errorString();
         });
 
+QTcpSocket testSock;
+testSock.connectToHost("127.0.0.1", 5559);
+if (!testSock.waitForConnected(1000)) {
+    qCritical() << "Failed to connect to stub:" << testSock.errorString();
+} else {
+    qInfo() << "Manual test connection succeeded";
+}
+
+
                 mSocket_ipV4.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
 qInfo() << "[TELNET] State after connectToHost:" << mSocket_ipV4.state();
 
