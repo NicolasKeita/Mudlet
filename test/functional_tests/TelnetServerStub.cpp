@@ -29,6 +29,7 @@
 TelnetServerStub::TelnetServerStub(QObject* parent)
     : QTcpServer(parent)
 {
+    std::cout << "[TelnetServerStub] Constructed" << std::endl;
     connect(this, &QTcpServer::newConnection, this, &TelnetServerStub::onNewConnection);
 }
 
@@ -43,6 +44,7 @@ void TelnetServerStub::start(const QString& host, quint16 port)
 
 void TelnetServerStub::onNewConnection()
 {
+    std::cout << "[TelnetServerStub] onNewConnection called" << std::endl;
     QTcpSocket* client = nextPendingConnection();
 
     if (!client) {
