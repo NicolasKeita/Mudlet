@@ -526,9 +526,10 @@ void cTelnet::slot_send_pass()
         sendData(mpHost->getPass(), false);
     }
 }
-
+#include <iostream>
 void cTelnet::slot_socketConnected()
 {
+    std::cout << "------ Debug socketConnected 1" << std::endl;
 #if defined(DEBUG_TELNET) && (DEBUG_TELNET & 4)
     qDebug().noquote() << "cTelnet::slot_socketConnected() INFO - called.";
 #endif
@@ -608,6 +609,7 @@ void cTelnet::slot_socketConnected()
         postMessage(tr("[  OK  ]  - Connection made (IPv4)."));
     }
 #endif
+std::cout << "------ Debug socketConnected 5" << std::endl;
     mpHost->mLuaInterpreter.call(qsl("onConnect"), QString());
     mConnectionTimer.start();
     mTimerLogin->start(2s);

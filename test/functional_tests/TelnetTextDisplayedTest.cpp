@@ -61,7 +61,7 @@ private slots:
     void test_TelnetTextDisplayed()
     {
         QString messageFromTheMud("\x1B[1z<B>Greetings < hunters & sorcerers</B>\x1B[7z");
-        QString messageToExpect("Greetings < hunters & srcerers");
+        QString messageToExpect("Greetings < hunters & sorcerers");
 
         mpServer->setWelcomeMessage(messageFromTheMud);
         startProfile(mpHostname, mpLocalhost, mpPort);
