@@ -66,9 +66,12 @@ jobs:
 
     - name: (Windows) Map runner hostname to localhost
       shell: powershell
+      # run: |
+      #   Write-Output "127.0.0.1 runnervmpabsp" | Out-File -FilePath "$env:SystemRoot\System32\drivers\etc\hosts" -Encoding ASCII -Append
       run: |
-        Write-Output "127.0.0.1 runnervmpabsp" | Out-File -FilePath "$env:SystemRoot\System32\drivers\etc\hosts" -Encoding ASCII -Append
+        echo "127.0.0.1 runnervmpabsp" | Out-File -FilePath "$env:SystemRoot\System32\drivers\etc\hosts" -Encoding ASCII -Append
 
+        
     - name: (Windows) Run QTest
       shell: msys2 {0}
       run: |
