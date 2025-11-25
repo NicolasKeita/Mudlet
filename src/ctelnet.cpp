@@ -852,11 +852,17 @@ void cTelnet::slot_socketSslError(const QList<QSslError>& errors)
 void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
 {
     std::cout << "------ Debug socketHostFound 1" << std::endl;
+    #if defined(QT_NO_SSL)
+    std::cout << "[DEBUG] QT_NO_SSL defined" << std::endl;
+    #else
+    std::cout << "[DEBUG] QT_NO_SSL NOT defined" << std::endl;
+    #endif
 #if defined(DEBUG_TELNET) && (DEBUG_TELNET & 4)
     qDebug().noquote() << "cTelnet::slot_socketHostFound(QHostInfo) INFO - called.";
 #endif
     QStringList addressList_ipV4;
     QStringList addressList_ipV6;
+    std::cout << "------ Debug socketHostFound 2 (loop addresses)" << std::endl;
     for (const QHostAddress& address : hostInfo.addresses()) {
         // Handle (or not) some special cases:
         if (QHostAddress::Null == address
@@ -894,6 +900,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
 
     const bool hasIPv4_address = (addressList_ipV4.count());
     const bool hasIPv6_address = (addressList_ipV6.count());
+    std::cout << "------ Debug socketHostFound 3 (check addresses)" << std::endl;
     if (!(hasIPv4_address || hasIPv6_address)) {
         /*: This text is used in the (expected) case when the user has provided
          * a URL for the Game Server rather than (unusually) an IP address.
@@ -930,6 +937,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
     if (addressesToReport.count() > 1) {
         std::sort(addressesToReport.begin(), addressesToReport.end());
     }
+    std::cout << "------ Debug socketHostFound 4 (raw ip check)" << std::endl;
     if (isRawIPv4Address(mHostUrl) || isRawIPv6Address(mHostUrl)) {
         // We've been given a raw IP address - so instead of repeating it show
         // what the reverse lookup gave us - but if it is the same thing then
@@ -956,6 +964,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
                                                                   >> mpHost;
         }
     } else {
+        std::cout << "------ Debug socketHostFound 5 (not raw ip)" << std::endl;
         /*: This text is used in the (expected) case when the user has provided
          * a URL (%1) for the Game Server rather than (unusually) an IP address.
          * After a DNS lookup we have found at least one but possibly more (%n)
@@ -975,6 +984,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
                                                                >> mpHost;
     }
 
+    std::cout << "------ Debug socketHostFound 6 (SSL branch)" << std::endl;
 #if !defined(QT_NO_SSL)
     /* This is the only point where we sample the state of the "use secure
      * connection" setting - so that if it gets changed whilst connected
@@ -983,7 +993,9 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
      */
     mCurrent_sslTsl = mpHost->mSslTsl;
     if (mCurrent_sslTsl) {
+        std::cout << "------ Debug socketHostFound 7 (SSL enabled)" << std::endl;
         if (hasIPv4_address && hasIPv6_address) {
+            std::cout << "------ Debug socketHostFound 8 (SSL both v4/v6)" << std::endl;
             /* Got both types of IP address so do the happy eyeballs stuff.
              * Use Qt::UniqueConnection so that duplicate ones are not made
              * if/when this code is re-run:
@@ -1032,6 +1044,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
             mSocket_ipV6.connectToHostEncrypted(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv6Protocol);
             mSocket_ipV4.connectToHostEncrypted(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
         } else {
+            std::cout << "------ Debug socketHostFound 9 (SSL single v4/v6)" << std::endl;
             // One, but, only one, of these will be true:
             if (hasIPv6_address) {
                 connect(&mSocket_ipV6, &QSslSocket::encrypted, this, &cTelnet::slot_socketConnected, Qt::UniqueConnection);
@@ -1104,8 +1117,10 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
         }
 
     } else {
+        std::cout << "------ Debug socketHostFound 10 (SSL disabled)" << std::endl;
 #endif
         if (hasIPv4_address && hasIPv6_address) {
+            std::cout << "------ Debug socketHostFound 11 (NO SSL both v4/v6)" << std::endl;
             connect(&mSocket_ipV6, &QAbstractSocket::connected, this, &cTelnet::slot_socketConnected, Qt::UniqueConnection);
             connect(&mSocket_ipV4, &QAbstractSocket::connected, this, &cTelnet::slot_socketConnected, Qt::UniqueConnection);
             connect(&mSocket_ipV6, &QAbstractSocket::disconnected, this, &cTelnet::slot_socketDisconnected, Qt::UniqueConnection);
@@ -1143,6 +1158,7 @@ void cTelnet::slot_socketHostFound(QHostInfo hostInfo)
             mSocket_ipV4.connectToHost(hostInfo.hostName(), mHostPort, QIODevice::ReadWrite, QAbstractSocket::IPv4Protocol);
 
         } else {
+            std::cout << "------ Debug socketHostFound 12 (NO SSL single v4/v6)" << std::endl;
             if (hasIPv6_address) {
                 connect(&mSocket_ipV6, &QAbstractSocket::connected, this, &cTelnet::slot_socketConnected, Qt::UniqueConnection);
                 connect(&mSocket_ipV6, &QAbstractSocket::disconnected, this, &cTelnet::slot_socketDisconnected, Qt::UniqueConnection);
