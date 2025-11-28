@@ -526,7 +526,7 @@ void CredentialManager::storeCredential(const QString& service, const QString& a
 
     writeJob->start();
 }
-
+#include <iostream>
 void CredentialManager::retrieveCredential(const QString& service, const QString& account,
                                           CredentialRetrievalCallback callback)
 {
@@ -618,10 +618,13 @@ void CredentialManager::retrieveCredential(const QString& service, const QString
                 // Capture the error string now while readJob is still valid
                 QString keychainError = readJob->errorString();
 
+                std::cout << "---- DEbug Keychain errr" << std::endl;
+
                 // Check legacy keychain format asynchronously
                 auto* legacyReadJob = new QKeychain::ReadPasswordJob("Mudlet profile", this);
                 legacyReadJob->setKey(profileName);
                 legacyReadJob->setAutoDelete(false);
+                std::cout << "---- DEbug Keychain errr 2 " << std::endl;
 
                 // Store the current callback and clear it to prevent double-calling
                 auto originalCallback = mCurrentRetrievalCallback;
@@ -697,10 +700,13 @@ void CredentialManager::retrieveCredential(const QString& service, const QString
                     legacyReadJob->deleteLater();
                 });
 
+                std::cout << "---- DEbug Keychain errr 3 " << std::endl;
                 legacyReadJob->start();
+                std::cout << "---- DEbug Keychain errr 4" << std::endl;
 
                 // Early return to avoid the file storage check below
                 readJob->deleteLater();
+                std::cout << "---- DEbug Keychain errr 5" << std::endl;
                 return;
             }
 
