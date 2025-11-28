@@ -2247,7 +2247,7 @@ void dlgConnectionProfiles::addLetterToProfileSearch(const int key)
 
     listWidget_profiles->setCurrentRow(indexes.first());
 }
-
+#include <iostream>
 void dlgConnectionProfiles::slot_loadPasswordAsync()
 {
     if (!sender()) {
@@ -2290,6 +2290,7 @@ void dlgConnectionProfiles::slot_loadPasswordAsync()
     if (mudlet::self()->storingPasswordsSecurely()) {
         mKeychainOperationInProgress = true;
         auto* credManager = new CredentialManager(this);
+        std::cout << "------ Retrieve pass word " << std::endl;
         credManager->retrievePassword(profile_name, "character",
             [this, credManager, profile_name](bool success, const QString& retrievedPassword, const QString& errorMessage) {
                 // Clear the operation flag first
