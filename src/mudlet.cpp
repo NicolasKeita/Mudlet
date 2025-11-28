@@ -4335,9 +4335,10 @@ void mudlet::slot_processEventLoopHackTimerRun()
     }
     pH->mpConsole->refresh();
 }
-
+#include <iostream>
 void mudlet::slot_connectionDialogueFinished(const QString& profile, bool connect)
 {
+    std::cout << "Connection DialogieFinished" << std::endl;
     Host* pHost = getHostManager().getHost(profile);
     if (!pHost) {
         return;
