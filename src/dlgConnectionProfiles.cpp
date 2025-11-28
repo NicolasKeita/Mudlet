@@ -90,6 +90,7 @@ dlgConnectionProfiles::dlgConnectionProfiles(QWidget* parent)
     QAbstractButton* abort = dialog_buttonbox->button(QDialogButtonBox::Cancel);
     connect_button = dialog_buttonbox->addButton(tr("Connect"), QDialogButtonBox::AcceptRole);
     connect_button->setAccessibleDescription(btn_connOrLoad_disabled_accessDesc);
+    connect_button->setObjectName(qsl("connect_button"));
     offline_button = dialog_buttonbox->addButton(tr("Offline"), QDialogButtonBox::AcceptRole);
     offline_button->setAccessibleDescription(btn_connOrLoad_disabled_accessDesc);
 

@@ -83,26 +83,31 @@ private slots:
     {
         QTimer::singleShot(0, qApp, [hostname, address, port]() {
             mudlet::self()->startAutoLogin({});
-            QTest::qWait(100);
+            QTest::qWait(500);
             // Click on the new profile button
             QTest::mouseClick(mudlet::self()->mpConnectionDialog->new_profile_button, Qt::LeftButton);
-            QTest::qWait(100);
+            QTest::qWait(500);
             // Fill hostname
                 QLineEdit* nameEdit = mudlet::self()->mpConnectionDialog->profile_name_entry;
             QTest::keyClicks(nameEdit, hostname);
-            QTest::qWait(100);
+            QTest::qWait(500);
             // Fill address
                 QLineEdit* addressEdit = mudlet::self()->mpConnectionDialog->host_name_entry;
             QTest::keyClicks(addressEdit, address);
-            QTest::qWait(100);
+            QTest::qWait(500);
             // Fill port
                 QLineEdit* portEdit = mudlet::self()->mpConnectionDialog->port_entry;
             QTest::keyClicks(portEdit, port);
-            QTest::qWait(100);
-            // Click connect
+            QTest::qWait(500);
+
             
+            // Click connect
+            QPushButton* btn = mudlet::self()->mpConnectionDialog->findChild<QPushButton*>("connect_button");
+            if (!btn) {
+                QFAIL("Could not find connect button in connection dialog.");
+            }
                 //QPushButton* connectBtn = qobject_cast<QPushButton*>(mudlet::self()->mpConnectionDialog->dialog_buttonbox->button(QDialogButtonBox::Ok));
-            QTest::mouseClick(mudlet::self()->mpConnectionDialog->connect_button, Qt::LeftButton);
+            QTest::mouseClick(btn, Qt::LeftButton);
         });
 
         QSignalSpy spy(mudlet::self(), &mudlet::signal_profileLoaded);
