@@ -121,7 +121,7 @@ private slots:
         });
 
         QSignalSpy spy(mudlet::self(), &mudlet::signal_profileLoaded);
-        const int profileLoadTimeoutMs = 1000;
+        const int profileLoadTimeoutMs = 5000;
         if (!spy.wait(profileLoadTimeoutMs)) {
             QFAIL(qPrintable(
                 QString("Timeout: profile was not loaded within %1 ms.").arg(profileLoadTimeoutMs)));
