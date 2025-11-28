@@ -313,15 +313,18 @@ dlgConnectionProfiles::~dlgConnectionProfiles()
     QCoreApplication::instance()->removeEventFilter(this);
 }
 
+#include <iostream>
 // the dialog can be accepted by pressing Enter on an qlineedit; this is a safeguard against it
 // accepting invalid data
 void dlgConnectionProfiles::accept()
 {
+    std::cout << "Accept OK " << std::endl;
     if (validName && validUrl && validPort) {
         setVisible(false);
         // This is needed to make the above take effect as fast as possible:
         qApp->processEvents();
 
+        std::cout << "Accept OK 2 " << std::endl;
         // Check if keychain authentication is pending - if so, wait for it
         ensurePasswordLoadedThenConnect(true);
     }
@@ -341,8 +344,10 @@ void dlgConnectionProfiles::ensurePasswordLoadedThenConnect(bool alsoConnect)
 {
     const QString profile_name = profile_name_entry->text().trimmed();
 
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 1 : " << profile_name.toStdString() << std::endl;
     if (profile_name.isEmpty()) {
         QDialog::accept();
+        std::cout "--- EnsurePasswordLoadedThenConnect for profile 2 : " << profile_name.toStdString() << std::endl;
         return;
     }
 
@@ -354,9 +359,12 @@ void dlgConnectionProfiles::ensurePasswordLoadedThenConnect(bool alsoConnect)
         return; // Will be handled by keychain callback
     }
 
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 3 : " << profile_name.toStdString() << std::endl;
     // No pending keychain operations, proceed immediately
     loadProfile(alsoConnect);
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 4 : " << profile_name.toStdString() << std::endl;
     QDialog::accept();
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 5 : " << profile_name.toStdString() << std::endl;
 }
 
 bool dlgConnectionProfiles::hasPendingKeychainOperation(const QString& profile_name) const
