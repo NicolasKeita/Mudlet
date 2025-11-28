@@ -51,11 +51,14 @@ private slots:
     {
         mpServer = new TelnetServerStub(qApp);
         mpServer->start(mpLocalhost, mpPort.toUShort());
+
         mudlet::start();
         mudlet::self()->setupConfig();
         mudlet::self()->takeOwnershipOfInstanceCoordinator(std::make_unique<MudletInstanceCoordinator>("MudletInstanceCoordinator"));
-        mudlet::self()->init();
         deleteProfileDirectory(mpHostname);
+        deleteProfileDirectory("new profile name");
+
+        mudlet::self()->init();
     }
 
     void test_TelnetTextDisplayed()
@@ -75,6 +78,7 @@ private slots:
         delete mpServer;
         mpServer = nullptr;
         deleteProfileDirectory(mpHostname);
+        deleteProfileDirectory("new profile name");
         delete mudlet::self();
     }
 
