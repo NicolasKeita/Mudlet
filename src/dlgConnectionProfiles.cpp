@@ -1717,8 +1717,10 @@ void dlgConnectionProfiles::saveProfileCopy(const QDir& newProfiledir, const pug
     }
 }
 
+#include <iostream>
 void dlgConnectionProfiles::loadProfile(bool alsoConnect)
 {
+    std::cout << "-- trying to load" << std::endl;
     const QString profile_name = profile_name_entry->text().trimmed();
 
     if (profile_name.isEmpty()) {
