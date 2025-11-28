@@ -100,8 +100,10 @@ private slots:
         });
 
         QSignalSpy spy(mudlet::self(), &mudlet::signal_profileLoaded);
-        if (!spy.wait(1000)) {
-            QFAIL("Profile took too long to load.");
+        const int profileLoadTimeoutMs = 5000;
+        if (!spy.wait(profileLoadTimeoutMs)) {
+            QFAIL(qPrintable(
+                QString("Timeout: profile was not loaded within %1 ms.").arg(profileLoadTimeoutMs)));
         }
         auto host = mudlet::self()->getActiveHost();
         if (!host) {

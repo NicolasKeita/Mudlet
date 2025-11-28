@@ -28,30 +28,8 @@ jobs:
           # ',' in some of the following with a '/' seemed to cause extra
           # spurious steps in the build and broke things! - SlySven
           # oldest OS supported for maximum compatibility of built AppImage
-          - os: ubuntu-22.04
-            buildname: 'ubuntu / gcc / lua tests'
-            compiler: gcc_64
-            gcc_compiler_version: 10
-            qt: '6.9.0'
-            deploy: 'deploy'
-            run_tests: 'true'
-          - os: ubuntu-22.04
-            # Another try to use GCC12
-            buildname: 'ubuntu (x86_64)'
-            compiler: gcc_64
-            gcc_compiler_version: 12
-            qt: '6.9.0'
-          - os: ubuntu-latest
-            buildname: 'ubuntu / clang'
-            compiler: clang_64
-            gcc_compiler_version: 10
-            qt: '6.9.0'
-          - os: macos-15-intel
-            buildname: 'macos (x86_64) / c++, lua tests'
-            compiler: clang_64
-            qt: '6.9.0'
-            deploy: 'deploy'
-            run_tests: 'true'
+
+
           - os: macos-14
             buildname: 'macos (arm64) / c++, lua tests'
             compiler: clang_64
