@@ -2319,6 +2319,8 @@ void dlgConnectionProfiles::slot_loadPasswordAsync()
                     }
                 }
 
+                std::cout << "loadpassword Async 2 called" << std::endl;
+
                 // Check if there's a pending connection waiting for this password load
                 // (do this regardless of profile selection state to avoid hanging)
                 if (!mPendingProfileLoad.isEmpty() && mPendingProfileLoad == profile_name) {
