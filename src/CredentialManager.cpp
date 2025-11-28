@@ -38,6 +38,7 @@
 #else
 #include <qt6keychain/keychain.h>
 #endif
+#include <iostream>
 
 // Forward declaration to avoid including mudlet.h
 class mudlet;
@@ -526,7 +527,7 @@ void CredentialManager::storeCredential(const QString& service, const QString& a
 
     writeJob->start();
 }
-#include <iostream>
+
 void CredentialManager::retrieveCredential(const QString& service, const QString& account,
                                           CredentialRetrievalCallback callback)
 {
