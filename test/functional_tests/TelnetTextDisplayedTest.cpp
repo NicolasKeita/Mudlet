@@ -59,7 +59,6 @@ private slots:
         deleteProfileDirectory("new profile name");
 
         mudlet::self()->init();
-        mudlet::self()->mStorePasswordsSecurely = false;
     }
 
     void test_TelnetTextDisplayed()
