@@ -344,10 +344,10 @@ void dlgConnectionProfiles::ensurePasswordLoadedThenConnect(bool alsoConnect)
 {
     const QString profile_name = profile_name_entry->text().trimmed();
 
-    std::cout "--- EnsurePasswordLoadedThenConnect for profile 1 : " << profile_name.toStdString() << std::endl;
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 1 : " << std::endl;
     if (profile_name.isEmpty()) {
         QDialog::accept();
-        std::cout "--- EnsurePasswordLoadedThenConnect for profile 2 : " << profile_name.toStdString() << std::endl;
+        std::cout "--- EnsurePasswordLoadedThenConnect for profile 2 : " << std::endl;
         return;
     }
 
@@ -359,12 +359,12 @@ void dlgConnectionProfiles::ensurePasswordLoadedThenConnect(bool alsoConnect)
         return; // Will be handled by keychain callback
     }
 
-    std::cout "--- EnsurePasswordLoadedThenConnect for profile 3 : " << profile_name.toStdString() << std::endl;
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 3 : " << std::endl;
     // No pending keychain operations, proceed immediately
     loadProfile(alsoConnect);
-    std::cout "--- EnsurePasswordLoadedThenConnect for profile 4 : " << profile_name.toStdString() << std::endl;
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 4 : " << std::endl;
     QDialog::accept();
-    std::cout "--- EnsurePasswordLoadedThenConnect for profile 5 : " << profile_name.toStdString() << std::endl;
+    std::cout "--- EnsurePasswordLoadedThenConnect for profile 5 : " << std::endl;
 }
 
 bool dlgConnectionProfiles::hasPendingKeychainOperation(const QString& profile_name) const
