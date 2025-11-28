@@ -2951,9 +2951,10 @@ void mudlet::writeSettings()
         break;
     }
 }
-
+#include <iostream>
 void mudlet::slot_showConnectionDialog()
 {
+    std::cout << " --- ShowConnectionDialog" << std::endl;
     if (mpConnectionDialog) {
         // If dialog already exists, bring it to the front of the main window
         mpConnectionDialog->raise();
@@ -2962,6 +2963,7 @@ void mudlet::slot_showConnectionDialog()
     }
 
     mpConnectionDialog = new dlgConnectionProfiles(this);
+    std::cout << " --- ShowConnectionDialog 2 " << std::endl;
     connect(mpConnectionDialog, &dlgConnectionProfiles::signal_load_profile, this, &mudlet::slot_connectionDialogueFinished);
     mpConnectionDialog->fillout_form();
 

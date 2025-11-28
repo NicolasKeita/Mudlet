@@ -39,7 +39,7 @@ private:
     TelnetServerStub* mpServer = nullptr;
     const QString mpHostname = "Test-Telnet";
     const QString mpPort = "4000";
-    const QString mpLocalhost = "0.0.0.0";
+    const QString mpLocalhost = "localhost";
 
 private slots:
     void initTestCase()
@@ -90,7 +90,7 @@ private slots:
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
-            QTest::keyClicks(QApplication::focusWidget(), "127.0.0.1");
+            QTest::keyClicks(QApplication::focusWidget(), address);
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
@@ -100,7 +100,7 @@ private slots:
         });
 
         QSignalSpy spy(mudlet::self(), &mudlet::signal_profileLoaded);
-        const int profileLoadTimeoutMs = 5000;
+        const int profileLoadTimeoutMs = 1000;
         if (!spy.wait(profileLoadTimeoutMs)) {
             QFAIL(qPrintable(
                 QString("Timeout: profile was not loaded within %1 ms.").arg(profileLoadTimeoutMs)));
