@@ -353,6 +353,7 @@ void dlgConnectionProfiles::ensurePasswordLoadedThenConnect(bool alsoConnect)
 
     // Check if we have any pending keychain operations for this profile
     if (hasPendingKeychainOperation(profile_name)) {
+        std::cout << "--- EnsurePasswordLoadedThenConnect for profile -2 - 2 : " << std::endl;
         // Queue the profile loading until keychain completes
         mPendingConnect = alsoConnect;
         mPendingProfileLoad = profile_name;
