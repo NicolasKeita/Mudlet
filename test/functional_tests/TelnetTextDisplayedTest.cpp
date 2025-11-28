@@ -39,7 +39,7 @@ private:
     TelnetServerStub* mpServer = nullptr;
     const QString mpHostname = "Test-Telnet";
     const QString mpPort = "4000";
-    const QString mpLocalhost = "localhost";
+    const QString mpLocalhost = "0.0.0.0";
 
 private slots:
     void initTestCase()
@@ -90,7 +90,7 @@ private slots:
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
-            QTest::keyClicks(QApplication::focusWidget(), address);
+            QTest::keyClicks(QApplication::focusWidget(), "127.0.0.1");
             QTest::qWait(100);
             QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
             QTest::qWait(100);
