@@ -100,6 +100,7 @@ private slots:
             QTest::keyClicks(portEdit, port);
             QTest::qWait(100);
             // Click connect
+            
                 //QPushButton* connectBtn = qobject_cast<QPushButton*>(mudlet::self()->mpConnectionDialog->dialog_buttonbox->button(QDialogButtonBox::Ok));
             QTest::mouseClick(mudlet::self()->mpConnectionDialog->connect_button, Qt::LeftButton);
         });

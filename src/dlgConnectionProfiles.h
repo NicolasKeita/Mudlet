@@ -137,7 +137,9 @@ private:
     QPalette mReadOnlyPalette;
     QAction* mpCopyProfile = nullptr;
     QPushButton* offline_button = nullptr;
+    public:
     QPushButton* connect_button = nullptr;
+    private:
     QLineEdit* delete_profile_lineedit = nullptr;
     QPushButton* delete_button  = nullptr;
     QString mDiscordApplicationId;
