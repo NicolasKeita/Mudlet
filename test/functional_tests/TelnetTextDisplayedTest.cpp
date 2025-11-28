@@ -72,6 +72,7 @@ private slots:
 
     void cleanup()
     {
+        return;
         delete mpServer;
         mpServer = nullptr;
         deleteProfileDirectory(mpHostname);
