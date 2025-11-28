@@ -46,7 +46,6 @@ datetime = {
   }
 }
 
-
 -- the timestamp is stored in UTC time, so work out the difference in seconds
 -- from local to UTC time. Credit: https://github.com/stevedonovan/Penlight/blob/master/lua/pl/Date.lua#L85
 function datetime:calculate_UTCdiff(ts)
@@ -65,7 +64,7 @@ end
 -- then compiling them.
 function datetime:_get_pattern(format)
   if not datetime._pattern_cache[format] then
-    local fmt = rex_gsub_custom(format, "(%[A-Za-z])",
+    local fmt = rex.gsub(format, "(%[A-Za-z])",
     function(m)
       return datetime._directives[m] or m
     end
