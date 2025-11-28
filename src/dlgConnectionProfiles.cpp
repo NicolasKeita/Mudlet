@@ -2323,7 +2323,7 @@ void dlgConnectionProfiles::slot_loadPasswordAsync()
 
                 // Check if there's a pending connection waiting for this password load
                 // (do this regardless of profile selection state to avoid hanging)
-                if (!mPendingProfileLoad.isEmpty() && mPendingProfileLoad == profile_name) {
+                if (!mPendingProfileLoad.isEmpty() && mPendingProfileLoad == profile_name) { 
                     qDebug() << "dlgConnectionProfiles: Password load completed, proceeding with pending connection for" << profile_name;
 
                     // Clear pending state

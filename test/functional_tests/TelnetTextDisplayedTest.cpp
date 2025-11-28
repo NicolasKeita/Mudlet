@@ -88,21 +88,21 @@ private slots:
         QTimer::singleShot(0, qApp, [hostname, address, port]() {
             std::cout << "0 --- " << std::endl;
             mudlet::self()->startAutoLogin({});
-            QTest::qWait(500);
+            QTest::qWait(5000);
             // Click on the new profile button
             std::cout << "1 --- " << std::endl;
             QTest::mouseClick(mudlet::self()->mpConnectionDialog->new_profile_button, Qt::LeftButton);
-            QTest::qWait(500);
+            QTest::qWait(5000);
             // Fill hostname
             std::cout << "2 --- " << std::endl;
                 QLineEdit* nameEdit = mudlet::self()->mpConnectionDialog->profile_name_entry;
             QTest::keyClicks(nameEdit, hostname);
-            QTest::qWait(500);
+            QTest::qWait(5000);
             // Fill address
             std::cout << "3 --- " << std::endl;
                 QLineEdit* addressEdit = mudlet::self()->mpConnectionDialog->host_name_entry;
             QTest::keyClicks(addressEdit, address);
-            QTest::qWait(500);
+            QTest::qWait(5000);
             // Fill port
             std::cout << "4 --- " << std::endl;
                 QLineEdit* portEdit = mudlet::self()->mpConnectionDialog->port_entry;
