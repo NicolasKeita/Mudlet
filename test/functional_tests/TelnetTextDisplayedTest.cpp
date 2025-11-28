@@ -72,7 +72,6 @@ private slots:
 
     void cleanup()
     {
-        return;
         delete mpServer;
         mpServer = nullptr;
         deleteProfileDirectory(mpHostname);
@@ -85,19 +84,24 @@ private slots:
         QTimer::singleShot(0, qApp, [hostname, address, port]() {
             mudlet::self()->startAutoLogin({});
             QTest::qWait(100);
+            // Click on the new profile button
             QTest::mouseClick(mudlet::self()->mpConnectionDialog->new_profile_button, Qt::LeftButton);
             QTest::qWait(100);
-            QTest::keyClicks(QApplication::focusWidget(), hostname);
+            // Fill hostname
+                QLineEdit* nameEdit = mudlet::self()->mpConnectionDialog->profile_name_entry;
+            QTest::keyClicks(nameEdit, hostname);
             QTest::qWait(100);
-            QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
+            // Fill address
+                QLineEdit* addressEdit = mudlet::self()->mpConnectionDialog->host_name_entry;
+            QTest::keyClicks(addressEdit, address);
             QTest::qWait(100);
-            QTest::keyClicks(QApplication::focusWidget(), address);
+            // Fill port
+                QLineEdit* portEdit = mudlet::self()->mpConnectionDialog->port_entry;
+            QTest::keyClicks(portEdit, port);
             QTest::qWait(100);
-            QTest::keyClick(QApplication::focusWidget(), Qt::Key_Tab);
-            QTest::qWait(100);
-            QTest::keyClicks(QApplication::focusWidget(), port);
-            QTest::qWait(100);
-            QTest::keyClick(QApplication::focusWidget(), Qt::Key_Return);
+            // Click connect
+                //QPushButton* connectBtn = qobject_cast<QPushButton*>(mudlet::self()->mpConnectionDialog->dialog_buttonbox->button(QDialogButtonBox::Ok));
+            QTest::mouseClick(mudlet::self()->mpConnectionDialog->connect_button, Qt::LeftButton);
         });
 
         QSignalSpy spy(mudlet::self(), &mudlet::signal_profileLoaded);
